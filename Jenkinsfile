@@ -57,7 +57,7 @@ spec:
         
         /*stage('Dart Analyzer') {
             steps {
-              publishChecks name: 'code-analyze', status: 'IN_PROGRESS', summary: 'Flutter code analyze started', title: 'Analyze code'
+              // publishChecks name: 'code-analyze', status: 'IN_PROGRESS', summary: 'Flutter code analyze started', title: 'Analyze code'
                 container('flutter'){
                   script{
                     ANALYZE_LOGS = sh (
