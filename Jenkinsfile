@@ -57,7 +57,7 @@ spec:
         
         /*stage('Dart Analyzer') {
             steps {
-              // publishChecks name: 'code-analyze', status: 'IN_PROGRESS', summary: 'Flutter code analyze started', title: 'Analyze code'
+              publishChecks name: 'code-analyze', status: 'IN_PROGRESS', summary: 'Flutter code analyze started', title: 'Analyze code'
                 container('flutter'){
                   script{
                     ANALYZE_LOGS = sh (
@@ -72,7 +72,7 @@ spec:
         */
         stage('Build flutter application') {
             steps {
-              publishChecks name: 'code-build', status: 'IN_PROGRESS', summary: 'Flutter code build started', title: 'Building code'
+              //publishChecks name: 'code-build', status: 'IN_PROGRESS', summary: 'Flutter code build started', title: 'Building code'
                 container('flutter'){
                     sh """
                         flutter build web --web-renderer html --release
@@ -81,12 +81,12 @@ spec:
                     """
                                           
                 }
-              publishChecks name: 'code-build', summary: 'Flutter code build complete', title: 'Building code'
+             // publishChecks name: 'code-build', summary: 'Flutter code build complete', title: 'Building code'
             } 
         }
         stage ('Build and push docker image to container repository') {
           steps {
-            publishChecks name: 'docker-push', status: 'IN_PROGRESS', summary: 'Building docker image and pushing to container repository', title: 'Building docker container'
+            //publishChecks name: 'docker-push', status: 'IN_PROGRESS', summary: 'Building docker image and pushing to container repository', title: 'Building docker container'
               script {
                   if (GIT_BRANCH == 'origin/dev') {
                       env.STAGE = "dev"
@@ -102,12 +102,12 @@ spec:
                   sh 'echo ${STAGE}'
                   sh 'kaniko -f ${WORKSPACE}/Dockerfile -c `pwd` --insecure --skip-tls-verify --destination=kbcontainer/kbdeployment:${STAGE}'
               }
-            publishChecks name: 'docker-push', summary: 'Image built and pushed to container registery', title: 'Building docker container'
+            //publishChecks name: 'docker-push', summary: 'Image built and pushed to container registery', title: 'Building docker container'
           }
         }
         stage('Deploy to Kubernetes') {
           steps {
-            publishChecks name: 'kube-deploy', status: 'IN_PROGRESS', summary: "Deploying to ${STAGE} environment..."
+            //publishChecks name: 'kube-deploy', status: 'IN_PROGRESS', summary: "Deploying to ${STAGE} environment..."
               container('kubectl'){
                   sh("sed -i  's#IMAGE#${IMAGE}:${STAGE}#g' ${WORKSPACE}/kube-deployment.yaml")
                   sh("sed -i  's#DEPLOYMENT#${DEPLOYMENT}-${STAGE}#g' ${WORKSPACE}/kube-deployment.yaml")
@@ -123,7 +123,7 @@ spec:
                     }
                   }
               }
-            publishChecks name: 'kube-deploy', summary: "Deployed to ${STAGE} environment.", title: 'Building docker container'
+            //publishChecks name: 'kube-deploy', summary: "Deployed to ${STAGE} environment.", title: 'Building docker container'
           }
         }
     } 
